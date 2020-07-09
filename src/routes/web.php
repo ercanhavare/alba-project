@@ -16,3 +16,9 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::resource("users","UserController");
+Route::resource("categories","CategoryController");
+Route::resource("products","ProductController");
+Route::resource("baskets","BasketController");
+Route::resource("payments","PaymentController");
