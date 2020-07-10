@@ -4,6 +4,13 @@ namespace App\Http\Requests\Category;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * Class PutRequest
+ * @package App\Http\Requests\Category
+ * @property int id
+ * @property string name
+ * @property int user_id
+ */
 class PutRequest extends FormRequest
 {
     /**

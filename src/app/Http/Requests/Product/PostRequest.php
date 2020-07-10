@@ -4,6 +4,17 @@ namespace App\Http\Requests\Product;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * Class PostRequest
+ * @package App\Http\Requests\Product
+ * @property int id
+ * @property string name
+ * @property int quantity
+ * @property mixed price
+ * @property string desc
+ * @property int category_id
+ * @property int user_id
+ */
 class PostRequest extends FormRequest
 {
     /**

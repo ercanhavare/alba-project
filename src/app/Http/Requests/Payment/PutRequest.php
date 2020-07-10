@@ -4,6 +4,14 @@ namespace App\Http\Requests\Payment;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * Class PutRequest
+ * @package App\Http\Requests\Payment
+ * @property int id
+ * @property mixed total_price
+ * @property int user_id
+ * @property int product_id
+ */
 class PutRequest extends FormRequest
 {
     /**

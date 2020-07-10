@@ -4,6 +4,14 @@ namespace App\Http\Requests\Image;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * Class PutRequest
+ * @package App\Http\Requests\Image
+ * @property int id
+ * @property string name
+ * @property string path
+ * @property int product_id
+ */
 class PutRequest extends FormRequest
 {
     /**
