@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Category\PostRequest;
 use App\Http\Requests\Category\PutRequest;
 use App\Models\Category;
+use App\User;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 class CategoryController extends Controller
@@ -18,6 +20,7 @@ class CategoryController extends Controller
     public function index()
     {
         try {
+            /** @var Category[]|Collection $categories */
             $categories = Category::all();
             return response()->json(["categories" => $categories]);
         } catch (\Exception $exception) {
