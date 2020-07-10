@@ -22,7 +22,7 @@ class RoleController extends Controller
     {
         try {
             /** @var Role[]|Collection $roles */
-            $roles = Role::all();
+            $roles = Role::with("user")->get();
             return response()->json(["roles" => $roles]);
         } catch (Exception $exception) {
             return response()->json(["error" => $exception->getMessage()]);

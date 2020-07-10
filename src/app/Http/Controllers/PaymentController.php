@@ -22,7 +22,7 @@ class PaymentController extends Controller
     {
         try {
             /** @var Payment[]|Collection $payments */
-            $payments = Payment::all();
+            $payments = Payment::with(["user.role","product.category.user"])->get();
             return response()->json(["payments" => $payments]);
         } catch (Exception $exception) {
             return response()->json(["error" => $exception->getMessage()]);

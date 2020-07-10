@@ -22,7 +22,7 @@ class ProductController extends Controller
     {
         try {
             /** @var Product[]|Collection $products */
-            $products = Product::all();
+            $products = Product::with(["category","user.role","images"])->get();
             return response()->json(["products" => $products]);
         } catch (Exception $exception) {
             return response()->json(["error" => $exception->getMessage()]);

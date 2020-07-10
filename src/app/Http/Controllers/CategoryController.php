@@ -22,7 +22,7 @@ class CategoryController extends Controller
     {
         try {
             /** @var Category[]|Collection $categories */
-            $categories = Category::all();
+            $categories = Category::with("user")->get();
             return response()->json(["categories" => $categories]);
         } catch (Exception $exception) {
             return response()->json(["error" => $exception->getMessage()]);

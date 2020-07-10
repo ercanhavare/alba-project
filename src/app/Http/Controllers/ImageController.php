@@ -22,7 +22,7 @@ class ImageController extends Controller
     {
         try {
             /** @var Image[]|Collection $images */
-            $images = Image::all();
+            $images = Image::with("product.category.user.role")->get();
             return response()->json(["images" => $images]);
         } catch (Exception $exception) {
             return response()->json(["error" => $exception->getMessage()]);
