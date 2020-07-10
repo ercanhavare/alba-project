@@ -2,84 +2,128 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Image\PostRequest;
+use App\Http\Requests\Image\PutRequest;
 use App\Models\Image;
-use Illuminate\Http\Request;
+use Exception;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\DB;
 
 class ImageController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
     public function index()
     {
-        //
+        try {
+            $images = Image::all();
+            return response()->json(["images" => $images]);
+        } catch (Exception $exception) {
+            return response()->json(["error" => $exception->getMessage()]);
+        }
     }
 
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return void
      */
     public function create()
     {
-        //
+        //return view
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param PostRequest $request
+     * @return JsonResponse
      */
-    public function store(Request $request)
+    public function store(PostRequest $request)
     {
-        //
+        DB::beginTransaction();
+        try {
+            $image = new Image();
+            /*
+             *
+             * */
+            $image->save();
+            DB::commit();
+            return \response()->json(["message" => "success"]);
+        } catch (Exception $exception) {
+            DB::rollBack();
+            return \response()->json(["error" => $exception->getMessage()]);
+        }
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Image  $image
-     * @return \Illuminate\Http\Response
+     * @param Image $image
+     * @return JsonResponse
      */
     public function show(Image $image)
     {
-        //
+        try {
+            return \response()->json(["image" => $image]);
+        } catch (Exception $exception) {
+            return \response()->json(["error" => $exception->getMessage()]);
+        }
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Image  $image
-     * @return \Illuminate\Http\Response
+     * @param Image $image
+     * @return void
      */
     public function edit(Image $image)
     {
-        //
+        //return view
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Image  $image
-     * @return \Illuminate\Http\Response
+     * @param PutRequest $request
+     * @param Image $image
+     * @return JsonResponse
      */
-    public function update(Request $request, Image $image)
+    public function update(PutRequest $request, Image $image)
     {
-        //
+        DB::beginTransaction();
+        try {
+            /*
+             *
+             * */
+            $image->update();
+            DB::commit();
+            return \response()->json(["message" => "success"]);
+        } catch (Exception $exception) {
+            DB::rollBack();
+            return \response()->json(["error" => $exception->getMessage()]);
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Image  $image
-     * @return \Illuminate\Http\Response
+     * @param Image $image
+     * @return JsonResponse
      */
     public function destroy(Image $image)
     {
-        //
+        DB::beginTransaction();
+        try {
+            $image->delete();
+            DB::commit();
+            return \response()->json(["message" => "success"]);
+        } catch (Exception $exception) {
+            DB::rollBack();
+            return \response()->json(["error" => $exception->getMessage()]);
+        }
     }
 }

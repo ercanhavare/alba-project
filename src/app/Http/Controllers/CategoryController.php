@@ -2,84 +2,123 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Category\PostRequest;
+use App\Http\Requests\Category\PutRequest;
 use App\Models\Category;
-use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\DB;
 
 class CategoryController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
     public function index()
     {
-        //
+        try {
+            $categories = Category::all();
+            return response()->json(["categories" => $categories]);
+        } catch (\Exception $exception) {
+            return response()->json(["error" => $exception->getMessage()]);
+        }
     }
 
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return void
      */
     public function create()
     {
-        //
+        //return view
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param PostRequest $request
+     * @return JsonResponse
      */
-    public function store(Request $request)
+    public function store(PostRequest $request)
     {
-        //
+        DB::beginTransaction();
+        try {
+            $category = new Category();
+            $category->name = $request->name;
+            $category->save();
+            DB::commit();
+            return \response()->json(["message" => "success"]);
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            return \response()->json(["error" => $exception->getMessage()]);
+        }
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Category  $category
-     * @return \Illuminate\Http\Response
+     * @param Category $category
+     * @return JsonResponse
      */
     public function show(Category $category)
     {
-        //
+        try {
+            return \response()->json(["category" => $category]);
+        } catch (\Exception $exception) {
+            return response()->json(["error" => $exception->getMessage()]);
+        }
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Category  $category
-     * @return \Illuminate\Http\Response
+     * @param Category $category
+     * @return void
      */
     public function edit(Category $category)
     {
-        //
+        //return view
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Category  $category
-     * @return \Illuminate\Http\Response
+     * @param PutRequest $request
+     * @param Category $category
+     * @return JsonResponse
      */
-    public function update(Request $request, Category $category)
+    public function update(PutRequest $request, Category $category)
     {
-        //
+        DB::beginTransaction();
+        try {
+            $category->name = $request->name;
+            $category->update();
+            DB::commit();
+            return \response()->json(["message" => "success"]);
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            return \response()->json(["error" => $exception->getMessage()]);
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Category  $category
-     * @return \Illuminate\Http\Response
+     * @param Category $category
+     * @return JsonResponse
      */
     public function destroy(Category $category)
     {
-        //
+        DB::beginTransaction();
+        try {
+            $category->delete();
+            DB::commit();
+            return \response()->json(["message" => "success"]);
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            return \response()->json(["error" => $exception->getMessage()]);
+        }
     }
 }
