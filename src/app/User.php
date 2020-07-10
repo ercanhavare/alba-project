@@ -2,8 +2,9 @@
 
 namespace App;
 
+use App\Models\Category;
+use App\Models\Product;
 use App\Models\Role;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -15,10 +16,12 @@ use Illuminate\Notifications\Notifiable;
  * @property string name
  * @property string surname
  * @property string email
- * @property mixed mobile
+ * @property int mobile
  * @property mixed password
- * @property mixed role_id
+ * @property int role_id
  * @property Role role
+ * @property Category categories
+ * @property Product products
  */
 class User extends Authenticatable
 {
@@ -55,5 +58,15 @@ class User extends Authenticatable
     public function role()
     {
         return $this->belongsTo(Role::class);
+    }
+
+    public function categories()
+    {
+        return $this->hasMany(Category::class);
+    }
+
+    public function products()
+    {
+        return $this->hasMany(Product::class);
     }
 }

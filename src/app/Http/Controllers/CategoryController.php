@@ -5,10 +5,11 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Category\PostRequest;
 use App\Http\Requests\Category\PutRequest;
 use App\Models\Category;
-use App\User;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use function response;
 
 class CategoryController extends Controller
 {
@@ -23,7 +24,7 @@ class CategoryController extends Controller
             /** @var Category[]|Collection $categories */
             $categories = Category::all();
             return response()->json(["categories" => $categories]);
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             return response()->json(["error" => $exception->getMessage()]);
         }
     }
@@ -41,7 +42,7 @@ class CategoryController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param PostRequest $request
+     * @param  PostRequest  $request
      * @return JsonResponse
      */
     public function store(PostRequest $request)
@@ -52,24 +53,24 @@ class CategoryController extends Controller
             $category->name = $request->name;
             $category->save();
             DB::commit();
-            return \response()->json(["message" => "success"]);
-        } catch (\Exception $exception) {
+            return response()->json(["message" => "success"]);
+        } catch (Exception $exception) {
             DB::rollBack();
-            return \response()->json(["error" => $exception->getMessage()]);
+            return response()->json(["error" => $exception->getMessage()]);
         }
     }
 
     /**
      * Display the specified resource.
      *
-     * @param Category $category
+     * @param  Category  $category
      * @return JsonResponse
      */
     public function show(Category $category)
     {
         try {
-            return \response()->json(["category" => $category]);
-        } catch (\Exception $exception) {
+            return response()->json(["category" => $category]);
+        } catch (Exception $exception) {
             return response()->json(["error" => $exception->getMessage()]);
         }
     }
@@ -77,7 +78,7 @@ class CategoryController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param Category $category
+     * @param  Category  $category
      * @return void
      */
     public function edit(Category $category)
@@ -88,8 +89,8 @@ class CategoryController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param PutRequest $request
-     * @param Category $category
+     * @param  PutRequest  $request
+     * @param  Category  $category
      * @return JsonResponse
      */
     public function update(PutRequest $request, Category $category)
@@ -99,17 +100,17 @@ class CategoryController extends Controller
             $category->name = $request->name;
             $category->update();
             DB::commit();
-            return \response()->json(["message" => "success"]);
-        } catch (\Exception $exception) {
+            return response()->json(["message" => "success"]);
+        } catch (Exception $exception) {
             DB::rollBack();
-            return \response()->json(["error" => $exception->getMessage()]);
+            return response()->json(["error" => $exception->getMessage()]);
         }
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param Category $category
+     * @param  Category  $category
      * @return JsonResponse
      */
     public function destroy(Category $category)
@@ -118,10 +119,10 @@ class CategoryController extends Controller
         try {
             $category->delete();
             DB::commit();
-            return \response()->json(["message" => "success"]);
-        } catch (\Exception $exception) {
+            return response()->json(["message" => "success"]);
+        } catch (Exception $exception) {
             DB::rollBack();
-            return \response()->json(["error" => $exception->getMessage()]);
+            return response()->json(["error" => $exception->getMessage()]);
         }
     }
 }

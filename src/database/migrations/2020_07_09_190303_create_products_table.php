@@ -19,13 +19,11 @@ class CreateProductsTable extends Migration
             $table->unsignedBigInteger("quantity");
             $table->unsignedDecimal("price",10,2);
             $table->text("desc");
-            $table->unsignedBigInteger("image_id");
             $table->unsignedBigInteger("category_id");
             $table->unsignedBigInteger("user_id");
             $table->timestamps();
             $table->softDeletes();
 
-            $table->foreign("image_id")->references("id")->on("images")->onDelete("cascade");
             $table->foreign("category_id")->references("id")->on("categories")->onDelete("cascade");
             $table->foreign("user_id")->references("id")->on("users")->onDelete("cascade");
         });
