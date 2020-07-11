@@ -6,6 +6,7 @@ use App\Http\Requests\Product\PostRequest;
 use App\Http\Requests\Product\PutRequest;
 use App\Models\Product;
 use Exception;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
@@ -53,10 +54,10 @@ class ProductController extends Controller
      *
      * @param  PostRequest  $request
      * @return JsonResponse
+     * @throws AuthorizationException
      */
     public function store(PostRequest $request)
     {
-        Auth::loginUsingId(1);
         $this->authorize("create", Product::class);
 
         DB::beginTransaction();
@@ -119,10 +120,10 @@ class ProductController extends Controller
      * @param  PutRequest  $request
      * @param  Product  $product
      * @return JsonResponse
+     * @throws AuthorizationException
      */
     public function update(PutRequest $request, Product $product)
     {
-        Auth::loginUsingId(1);
         $this->authorize("update", $product);
 
         DB::beginTransaction();
@@ -147,10 +148,10 @@ class ProductController extends Controller
      *
      * @param  Product  $product
      * @return JsonResponse
+     * @throws AuthorizationException
      */
     public function destroy(Product $product)
     {
-        Auth::loginUsingId(1);
         $this->authorize("delete", $product);
 
         DB::beginTransaction();

@@ -51,7 +51,6 @@ class CategoryController extends Controller
      */
     public function store(PostRequest $request)
     {
-        Auth::loginUsingId(2);
         $this->authorize("create", Category::class);
 
         DB::beginTransaction();
@@ -104,7 +103,6 @@ class CategoryController extends Controller
      */
     public function update(PutRequest $request, Category $category)
     {
-        Auth::loginUsingId(1);
         $this->authorize("update", $category);
 
         DB::beginTransaction();
@@ -128,7 +126,6 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
-        Auth::loginUsingId(1);
         $this->authorize("delete", $category);
 
         DB::beginTransaction();

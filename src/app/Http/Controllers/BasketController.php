@@ -20,8 +20,6 @@ class BasketController extends Controller
     public function index()
     {
         try {
-            auth()->loginUsingId(2);
-
             /** @var Basket $baskets */
             $baskets = Basket::query()->where("user_id", "=", auth()->user()->id)->get();
             return \response()->json(["baskets" => $baskets]);
@@ -50,8 +48,6 @@ class BasketController extends Controller
     {
         DB::beginTransaction();
         try {
-            auth()->loginUsingId(2);
-
             /** @var Product $product */
             $product = Product::query()->findOrFail($request->product_id);
 
@@ -115,8 +111,6 @@ class BasketController extends Controller
     public function update(PutRequest $request, $id)
     {
         try {
-            auth()->loginUsingId(2);
-
             /** @var Product $product */
             $product = Product::query()->findOrFail($request->product_id);
 

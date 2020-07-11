@@ -51,7 +51,6 @@ class PaymentController extends Controller
     {
         DB::beginTransaction();
         try {
-            auth()->loginUsingId(2);
             /** @var Basket $basket */
             $baskets = Basket::query()->where("user_id", "=", auth()->user()->id)->get();
 
