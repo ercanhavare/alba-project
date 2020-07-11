@@ -4,13 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Payment\PostRequest;
 use App\Http\Requests\Payment\PutRequest;
+use App\Models\Basket;
 use App\Models\Payment;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use function response;
-use Melihovv\ShoppingCart\Facades\ShoppingCart as Cart;
 
 
 class PaymentController extends Controller
@@ -24,7 +24,7 @@ class PaymentController extends Controller
     {
         try {
             /** @var Payment[]|Collection $payments */
-            $payments = Payment::with(["user.role","product.category.user"])->get();
+            $payments = Payment::with(["user.role", "product.category.user"])->get();
             return response()->json(["payments" => $payments]);
         } catch (Exception $exception) {
             return response()->json(["error" => $exception->getMessage()]);
@@ -51,11 +51,19 @@ class PaymentController extends Controller
     {
         DB::beginTransaction();
         try {
-            $payment = new Payment();
-            $payment->user_id = $request->user_id;
-            $payment->product_id = $request->product_id;
-            $payment->total_price = $request->total_price;
-            $payment->save();
+            auth()->loginUsingId(2);
+            /** @var Basket $basket */
+            $baskets = Basket::query()->where("user_id", "=", auth()->user()->id)->get();
+
+            foreach ($baskets as $basket) {
+                $payment = new Payment();
+                $payment->user_id = $basket->user_id;
+                $payment->product_id = $basket->product_id;
+                $payment->total_price = $basket->price;
+                $payment->save();
+                $basket->delete();
+            }
+
             DB::commit();
             return response()->json(["message" => "success"]);
         } catch (Exception $exception) {
@@ -95,40 +103,21 @@ class PaymentController extends Controller
      *
      * @param  PutRequest  $request
      * @param  Payment  $payment
-     * @return JsonResponse
+     * @return void
      */
     public function update(PutRequest $request, Payment $payment)
     {
-        DB::beginTransaction();
-        try {
-            $payment->user_id = $request->user_id;
-            $payment->product_id = $request->product_id;
-            $payment->total_price = $request->total_price;
-            $payment->update();
-            DB::commit();
-            return response()->json(["message" => "success"]);
-        } catch (Exception $exception) {
-            DB::rollBack();
-            return response()->json(["error" => $exception->getMessage()]);
-        }
+        //return
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @param  Payment  $payment
-     * @return JsonResponse
+     * @return void
      */
     public function destroy(Payment $payment)
     {
-        DB::beginTransaction();
-        try {
-            $payment->delete();
-            DB::commit();
-            return response()->json(["message" => "success"]);
-        } catch (Exception $exception) {
-            DB::rollBack();
-            return response()->json(["error" => $exception->getMessage()]);
-        }
+        //return
     }
 }

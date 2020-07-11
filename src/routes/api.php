@@ -21,3 +21,4 @@ Route::resource("users", "UserController");
 Route::resource("categories", "CategoryController");
 Route::resource("products", "ProductController");
 Route::resource("baskets", "BasketController");
+Route::resource("payments", "PaymentController");
