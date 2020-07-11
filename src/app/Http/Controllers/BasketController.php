@@ -3,32 +3,41 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Basket\PostRequest;
+use App\Http\Requests\Basket\PutRequest;
+use App\Models\Basket;
 use App\Models\Product;
 use Exception;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Response;
-use Melihovv\ShoppingCart\Facades\ShoppingCart as Cart;
+use Illuminate\Support\Facades\DB;
 
 class BasketController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return Response
+     * @return JsonResponse
      */
     public function index()
     {
-        //
+        try {
+            auth()->loginUsingId(2);
+
+            /** @var Basket $baskets */
+            $baskets = Basket::query()->where("user_id", "=", auth()->user()->id)->get();
+            return \response()->json(["baskets" => $baskets]);
+        } catch (Exception $exception) {
+            return \response()->json(["error" => $exception->getMessage()]);
+        }
     }
 
     /**
      * Show the form for creating a new resource.
      *
-     * @return Response
+     * @return void
      */
     public function create()
     {
-        //
+        //return view
     }
 
     /**
@@ -39,12 +48,37 @@ class BasketController extends Controller
      */
     public function store(PostRequest $request)
     {
+        DB::beginTransaction();
         try {
-            auth()->loginUsingId(1);
-            $product = Product::findOrFail($request->product_id);
-            Cart::add((int) $product->id, $product->name, (int) $product->price, (int) $request->quantity);
+            auth()->loginUsingId(2);
+
+            /** @var Product $product */
+            $product = Product::query()->findOrFail($request->product_id);
+
+            /** @var Basket $is_available_product */
+            $is_available_product = Basket::query()->where("product_id", "=", $product->id)
+                ->where("user_id", "=", auth()->user()->id)->first();
+
+            if (isset($is_available_product)) {
+
+                $is_available_product->quantity += 1;
+                $is_available_product->price += $product->price;
+                $is_available_product->update();
+                DB::commit();
+                return response()->json(["message" => "update success"]);
+            }
+
+            $basket = new Basket();
+            $basket->product_id = $request->product_id;
+            $basket->price = $product->price;
+            $basket->quantity = $request->quantity;
+            $basket->user_id = auth()->user()->id;
+            $basket->save();
+            DB::commit();
+
             return \response()->json(["message" => "success"]);
         } catch (Exception $exception) {
+            DB::rollBack();
             return \response()->json(["error" => $exception->getMessage()]);
         }
     }
@@ -53,18 +87,18 @@ class BasketController extends Controller
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return Response
+     * @return void
      */
     public function show($id)
     {
-        //
+        //return view
     }
 
     /**
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
-     * @return Response
+     * @return void
      */
     public function edit($id)
     {
@@ -74,30 +108,59 @@ class BasketController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  Request  $request
+     * @param  PutRequest  $request
      * @param  int  $id
-     * @return Response
+     * @return JsonResponse
      */
-    public function update(Request $request, $id)
+    public function update(PutRequest $request, $id)
     {
-        //
+        try {
+            auth()->loginUsingId(2);
+
+            /** @var Product $product */
+            $product = Product::query()->findOrFail($request->product_id);
+
+            /** @var Basket $is_available_product */
+            $is_available_product = Basket::query()->where("product_id", "=", $product->id)
+                ->where("user_id", "=", auth()->user()->id)->first();
+
+            if (empty($is_available_product)) {
+                return response()->json(["message" => "basket is empty"]);
+            }
+
+            $is_available_product->quantity -= 1;
+            if ($is_available_product->quantity <= 0) {
+                $is_available_product->delete();
+                DB::commit();
+                return response()->json(["message" => "basket is empty"]);
+            }
+            $is_available_product->price -= $product->price;
+            $is_available_product->update();
+            DB::commit();
+            return response()->json(["message" => "update success"]);
+
+        } catch (Exception $exception) {
+            DB::rollBack();
+            return \response()->json(["error" => $exception->getMessage()]);
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  Product  $product
+     * @param $id
      * @return JsonResponse
      */
-    public function destroy(Product $product)
+    public function destroy($id)
     {
+        DB::beginTransaction();
         try {
-
-            $cartItem = Cart::add($product->id, $product->name, $product->price, $product->quantity);
-            Cart::remove($cartItem->getUniqueId());
-
+            Basket::query()->where("product_id", "=", $id)
+                ->where("user_id", "=", auth()->user()->id)->delete();
+            DB::commit();
             return \response()->json(["message" => "success"]);
         } catch (Exception $exception) {
+            DB::rollBack();
             return \response()->json(["error" => $exception->getMessage()]);
         }
     }
