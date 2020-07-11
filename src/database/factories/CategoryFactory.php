@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Factory;
 
 $factory->define(Category::class, function (Faker $faker) {
     return [
-        "name" => $faker->monthName,
+        "name" => $faker->streetName,
         "user_id" => User::all()->random()->id
     ];
 });
