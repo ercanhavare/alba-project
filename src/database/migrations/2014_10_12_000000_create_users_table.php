@@ -21,7 +21,7 @@ class CreateUsersTable extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string("mobile");
             $table->string('password');
-            $table->unsignedBigInteger("role_id");
+            $table->unsignedBigInteger("role_id")->default(2);
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();

@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @package App\Models
  * @property int id
  * @property string name
+ * @property string code
  * @property int quantity
  * @property mixed price
  * @property string desc
@@ -29,7 +30,7 @@ class Product extends Model
 {
     use SoftDeletes;
 
-    protected $fillable = ["name", "quantity", "price", "desc", "category_id", "user_id"];
+    protected $fillable = ["name","code", "quantity", "price", "desc", "category_id", "user_id"];
 
     public function category()
     {

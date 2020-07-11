@@ -24,6 +24,16 @@ class Image extends Model
 
     protected $fillable = ["name", "path", "product_id"];
 
+    public static function uploadImage($image):string
+    {
+        $original_image_name = $image->getClientOriginalName();
+        $image_name = uniqid() . '-' . $original_image_name;
+        $image_path = "uploads/images/products/";
+        $image->move($image_path, $image_name);
+        return "/" . $image_path . $image_name;
+
+    }
+
     public function product()
     {
         return $this->belongsTo(Product::class);

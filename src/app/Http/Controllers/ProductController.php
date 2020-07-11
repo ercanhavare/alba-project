@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Product\PostRequest;
 use App\Http\Requests\Product\PutRequest;
+use App\Models\Image;
 use App\Models\Product;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use function response;
 
@@ -22,7 +24,7 @@ class ProductController extends Controller
     {
         try {
             /** @var Product[]|Collection $products */
-            $products = Product::with(["category","user.role","images"])->get();
+            $products = Product::with(["category", "user.role", "images"])->get();
             return response()->json(["products" => $products]);
         } catch (Exception $exception) {
             return response()->json(["error" => $exception->getMessage()]);
@@ -51,12 +53,22 @@ class ProductController extends Controller
         try {
             $product = new Product();
             $product->name = $request->name;
+            $product->code = $request->code;
             $product->quantity = $request->quantity;
             $product->price = $request->price;
             $product->desc = $request->desc;
             $product->category_id = $request->category_id;
             $product->user_id = $request->user_id;
             $product->save();
+
+            foreach ($request->file("images") as $image) {
+                $product->images()->save(new Image([
+                    "name" => pathinfo($image->getClientOriginalName(), PATHINFO_FILENAME),
+                    "path" => Image::uploadImage($image),
+                    "user_id" => Auth::user()->id,
+                ]));
+            }
+
             DB::commit();
             return response()->json(["message" => "success"]);
         } catch (Exception $exception) {

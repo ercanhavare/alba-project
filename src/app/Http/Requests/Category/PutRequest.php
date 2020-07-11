@@ -31,7 +31,17 @@ class PutRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            "name" => "required|unique:categories|max:255",
+            "user_id" => "required|min:1"
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            "name.required" => "A category name is required",
+            "name.unique" => "A category name must be unique",
+            "user_id:required" => "A user is required"
         ];
     }
 }

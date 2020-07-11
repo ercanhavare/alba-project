@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Factory;
 $factory->define(Product::class, function (Faker $faker) {
     return [
         "name" => $faker->colorName,
+        "code" => $faker->randomAscii,
         "quantity" => $faker->numberBetween(10, 50),
         "price" => $faker->numberBetween(100, 500),
         "desc" => $faker->text,

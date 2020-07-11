@@ -13,6 +13,11 @@ use function response;
 
 class CategoryController extends Controller
 {
+    /* public function __construct()
+     {
+         $this->authorizeResource(Category::class, "categories");
+     }*/
+
     /**
      * Display a listing of the resource.
      *
@@ -47,10 +52,13 @@ class CategoryController extends Controller
      */
     public function store(PostRequest $request)
     {
+       // $this->authorize("create", Category::class);
+
         DB::beginTransaction();
         try {
             $category = new Category();
             $category->name = $request->name;
+            $category->user_id = $request->user_id;
             $category->save();
             DB::commit();
             return response()->json(["message" => "success"]);
@@ -98,6 +106,7 @@ class CategoryController extends Controller
         DB::beginTransaction();
         try {
             $category->name = $request->name;
+            $category->user_id = $request->user_id;
             $category->update();
             DB::commit();
             return response()->json(["message" => "success"]);

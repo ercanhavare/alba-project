@@ -32,7 +32,7 @@ class PutRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            "image" => "file|size:512",
         ];
     }
 }
