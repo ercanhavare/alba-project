@@ -4,13 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Product\PostRequest;
 use App\Http\Requests\Product\PutRequest;
-use App\Models\Image;
 use App\Models\Product;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Redis;
 use function response;
 
 class ProductController extends Controller
@@ -23,8 +23,15 @@ class ProductController extends Controller
     public function index()
     {
         try {
+            if ($products = Redis::get("products.all")) {
+                return json_decode($products);
+            }
+
             /** @var Product[]|Collection $products */
             $products = Product::with(["category", "user.role", "images"])->get();
+
+            Redis::setex("products.all", 60 * 60, $products);
+
             return response()->json(["products" => $products]);
         } catch (Exception $exception) {
             return response()->json(["error" => $exception->getMessage()]);

@@ -51,7 +51,7 @@ class CategoryController extends Controller
      */
     public function store(PostRequest $request)
     {
-        Auth::loginUsingId(1);
+        Auth::loginUsingId(2);
         $this->authorize("create", Category::class);
 
         DB::beginTransaction();
