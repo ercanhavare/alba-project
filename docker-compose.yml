@@ -36,6 +36,15 @@ services:
       SERVICE_NAME: mysql
     networks:
       - laravel
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./redis:/data
+    networks:
+      - laravel
 
   php:
     build:
