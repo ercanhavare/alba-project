@@ -17,7 +17,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property Carbon updated_at
  * @property Carbon deleted_at
  * @property User user
- * @property Product product
+ * @property Product products
  */
 class Category extends Model
 {

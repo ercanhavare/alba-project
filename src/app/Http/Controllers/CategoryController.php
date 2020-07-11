@@ -6,18 +6,15 @@ use App\Http\Requests\Category\PostRequest;
 use App\Http\Requests\Category\PutRequest;
 use App\Models\Category;
 use Exception;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use function response;
 
 class CategoryController extends Controller
 {
-    /* public function __construct()
-     {
-         $this->authorizeResource(Category::class, "categories");
-     }*/
-
     /**
      * Display a listing of the resource.
      *
@@ -42,6 +39,7 @@ class CategoryController extends Controller
     public function create()
     {
         //return view
+
     }
 
     /**
@@ -49,10 +47,12 @@ class CategoryController extends Controller
      *
      * @param  PostRequest  $request
      * @return JsonResponse
+     * @throws AuthorizationException
      */
     public function store(PostRequest $request)
     {
-       // $this->authorize("create", Category::class);
+        Auth::loginUsingId(1);
+        $this->authorize("create", Category::class);
 
         DB::beginTransaction();
         try {
@@ -71,12 +71,13 @@ class CategoryController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  Category  $category
+     * @param $id
      * @return JsonResponse
      */
-    public function show(Category $category)
+    public function show($id)
     {
         try {
+            $category = Category::with("products")->findOrFail($id);
             return response()->json(["category" => $category]);
         } catch (Exception $exception) {
             return response()->json(["error" => $exception->getMessage()]);
@@ -103,6 +104,9 @@ class CategoryController extends Controller
      */
     public function update(PutRequest $request, Category $category)
     {
+        Auth::loginUsingId(1);
+        $this->authorize("update", $category);
+
         DB::beginTransaction();
         try {
             $category->name = $request->name;
@@ -124,6 +128,9 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
+        Auth::loginUsingId(1);
+        $this->authorize("delete", $category);
+
         DB::beginTransaction();
         try {
             $category->delete();

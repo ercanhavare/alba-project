@@ -49,6 +49,9 @@ class ProductController extends Controller
      */
     public function store(PostRequest $request)
     {
+        Auth::loginUsingId(1);
+        $this->authorize("create", Product::class);
+
         DB::beginTransaction();
         try {
             $product = new Product();
@@ -61,13 +64,13 @@ class ProductController extends Controller
             $product->user_id = $request->user_id;
             $product->save();
 
-            foreach ($request->file("images") as $image) {
+            /*foreach ($request->file("images") as $image) {
                 $product->images()->save(new Image([
                     "name" => pathinfo($image->getClientOriginalName(), PATHINFO_FILENAME),
                     "path" => Image::uploadImage($image),
                     "user_id" => Auth::user()->id,
                 ]));
-            }
+            }*/
 
             DB::commit();
             return response()->json(["message" => "success"]);
@@ -112,6 +115,9 @@ class ProductController extends Controller
      */
     public function update(PutRequest $request, Product $product)
     {
+        Auth::loginUsingId(1);
+        $this->authorize("update", $product);
+
         DB::beginTransaction();
         try {
             $product->name = $request->name;
@@ -137,6 +143,9 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
+        Auth::loginUsingId(1);
+        $this->authorize("delete", $product);
+
         DB::beginTransaction();
         try {
             $product->delete();
