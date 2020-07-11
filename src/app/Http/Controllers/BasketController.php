@@ -2,14 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Http\Requests\Basket\PostRequest;
+use App\Models\Product;
+use Exception;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
+use Melihovv\ShoppingCart\Facades\ShoppingCart as Cart;
 
 class BasketController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index()
     {
@@ -19,7 +24,7 @@ class BasketController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function create()
     {
@@ -29,19 +34,26 @@ class BasketController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param  PostRequest  $request
+     * @return JsonResponse
      */
-    public function store(Request $request)
+    public function store(PostRequest $request)
     {
-        //
+        try {
+            auth()->loginUsingId(1);
+            $product = Product::findOrFail($request->product_id);
+            Cart::add((int) $product->id, $product->name, (int) $product->price, (int) $request->quantity);
+            return \response()->json(["message" => "success"]);
+        } catch (Exception $exception) {
+            return \response()->json(["error" => $exception->getMessage()]);
+        }
     }
 
     /**
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function show($id)
     {
@@ -52,7 +64,7 @@ class BasketController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function edit($id)
     {
@@ -62,9 +74,9 @@ class BasketController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update(Request $request, $id)
     {
@@ -74,11 +86,19 @@ class BasketController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param  Product  $product
+     * @return JsonResponse
      */
-    public function destroy($id)
+    public function destroy(Product $product)
     {
-        //
+        try {
+
+            $cartItem = Cart::add($product->id, $product->name, $product->price, $product->quantity);
+            Cart::remove($cartItem->getUniqueId());
+
+            return \response()->json(["message" => "success"]);
+        } catch (Exception $exception) {
+            return \response()->json(["error" => $exception->getMessage()]);
+        }
     }
 }

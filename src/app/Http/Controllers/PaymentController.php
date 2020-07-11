@@ -10,6 +10,8 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use function response;
+use Melihovv\ShoppingCart\Facades\ShoppingCart as Cart;
+
 
 class PaymentController extends Controller
 {
