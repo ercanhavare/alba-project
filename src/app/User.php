@@ -8,6 +8,7 @@ use App\Models\Role;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Passport\HasApiTokens;
 
 /**
  * Class User
@@ -25,8 +26,7 @@ use Illuminate\Notifications\Notifiable;
  */
 class User extends Authenticatable
 {
-    use Notifiable;
-    use SoftDeletes;
+    use Notifiable, SoftDeletes, HasApiTokens;
 
     /**
      * The attributes that are mass assignable.
@@ -36,6 +36,8 @@ class User extends Authenticatable
     protected $fillable = [
         'name', 'surname', 'email', 'mobile', 'password', 'role_id'
     ];
+
+    // protected $guarded = [];
 
     /**
      * The attributes that should be hidden for arrays.

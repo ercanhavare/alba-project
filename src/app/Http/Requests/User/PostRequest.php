@@ -39,7 +39,7 @@ class PostRequest extends FormRequest
             "surname" => "required|string|max:255",
             "email" => "required|string|email|max:255|unique:users",
             "mobile" => "required|string|max:255",
-            "role_id" => "required|int",
+            "role_id" => "nullable|int",
             "password" => "required|string|min:8|confirmed",
         ];
     }

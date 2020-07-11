@@ -17,8 +17,14 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });*/
 
-Route::resource("users", "UserController");
-Route::resource("categories", "CategoryController");
-Route::resource("products", "ProductController");
-Route::resource("baskets", "BasketController");
-Route::resource("payments", "PaymentController");
+
+Route::post('register', 'API\RegisterController@register');
+Route::post('login', 'API\RegisterController@login');
+
+Route::middleware("auth:api")->group(function () {
+    Route::resource("users", "UserController");
+    Route::resource("categories", "CategoryController");
+    Route::resource("products", "ProductController");
+    Route::resource("baskets", "BasketController");
+    Route::resource("payments", "PaymentController");
+});
