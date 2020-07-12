@@ -8,6 +8,8 @@ For the project setup please follow below steps: </p>
 
 ### 2) Build docker
 <p> docker-compose build && docker-compose up -d </p>
+<p> make folder ~/project/mysql </p>
+<p> make foled ~/project/redis </p>
 
 ### 3) Give permissions of folder
 <p>
@@ -18,6 +20,23 @@ sudo chmod -R 777 /path <br>
 ### 4) Configuration of Laravel
 <p> composer install </p>
 <p> ~/project/src/.env </p>
+
+<p>
+DB_CONNECTION=mysql <br>
+DB_HOST=mysql <br>
+DB_PORT=3306 <br>
+DB_DATABASE=homestead <br>
+DB_USERNAME=homestead <br>
+DB_PASSWORD=secret
+</p>
+
+<p>
+REDIS_HOST=redis <br>
+REDIS_PASSWORD=null <br>
+REDIS_PORT=6379 <br>
+REDIS_CLIENT=predis <br>
+</p>  
+
 <p> docker-compose exec php php artisan migrate:fresh --seed </p>
 <p> docker-compose exec php php artisan passport:install </p>
 
