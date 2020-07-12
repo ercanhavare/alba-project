@@ -57,7 +57,7 @@ class CategoryController extends Controller
         try {
             $category = new Category();
             $category->name = $request->name;
-            $category->user_id = $request->user_id;
+            $category->user_id = \auth()->user()->id;
             $category->save();
             DB::commit();
             return response()->json(["message" => "success"]);
@@ -100,6 +100,7 @@ class CategoryController extends Controller
      * @param  PutRequest  $request
      * @param  Category  $category
      * @return JsonResponse
+     * @throws AuthorizationException
      */
     public function update(PutRequest $request, Category $category)
     {
@@ -108,7 +109,7 @@ class CategoryController extends Controller
         DB::beginTransaction();
         try {
             $category->name = $request->name;
-            $category->user_id = $request->user_id;
+            $category->user_id = \auth()->user()->id;
             $category->update();
             DB::commit();
             return response()->json(["message" => "success"]);
