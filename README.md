@@ -8,8 +8,8 @@ For the project setup please follow below steps: </p>
 
 ### 2) Build docker
 <p> docker-compose build && docker-compose up -d </p>
-<p> make folder ~/project/mysql </p>
-<p> make foled ~/project/redis </p>
+<p> make a folder ~/project/mysql </p>
+<p> make a folder ~/project/redis </p>
 
 ### 3) Give permissions of folder
 <p>
