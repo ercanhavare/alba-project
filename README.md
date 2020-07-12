@@ -12,7 +12,7 @@ For the project setup please follow below steps: </p>
 ### 3) Give permissions of folder
 <p>
 sudo chown -R username:username /path <br>
-sudo chmod -R 775 /path <br>
+sudo chmod -R 777 /path <br>
 </p>
 
 ### 4) Configuration of Laravel
