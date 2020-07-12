@@ -25,6 +25,10 @@ sudo chmod -R 775 /path <br>
 <p> http://localhost:8080 </p>
 
 ### 6) UML Diagram
+<p> https://github.com/ercanhavare/alba-project/wiki/UML-Diagram </p>
+
+### 7) Postman Collection
+<p> https://github.com/ercanhavare/alba-project/wiki/Postman-Collection </p>
 
 
 
